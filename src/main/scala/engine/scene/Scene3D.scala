@@ -1,5 +1,6 @@
 package engine.scene
 
+import engine.scene.entities.{DiffuseLight, PointLight}
 import engine.scene.objects.VisibleObj
 import engine.scene.primitives.Ray
 
@@ -7,7 +8,11 @@ import engine.scene.primitives.Ray
   * Renderable scene representation
   * @param objects collection of visible objects
   */
-class Scene3D(objects: Iterable[VisibleObj]) {
+class Scene3D(
+    val objects: Iterable[VisibleObj],
+    val pointLights: Iterable[PointLight],
+    val diffuseLight: DiffuseLight
+) {
 
   /**
     * Calculate all scene objects intersections

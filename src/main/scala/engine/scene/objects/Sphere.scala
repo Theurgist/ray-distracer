@@ -1,8 +1,15 @@
 package engine.scene.objects
 
+import engine.materials.Material
 import engine.scene.primitives.{Ray, Vec3d}
 
-case class Sphere(center: Vec3d, radius: Double, color: Int) extends VisibleObj {
+/**
+  * Basic 3D object: spheric surface
+  * @param center sphere center
+  * @param radius sphere radius
+  * @param material surface rendering properties
+  */
+case class Sphere(center: Vec3d, radius: Double, material: Material) extends VisibleObj {
 
   override def intersect(ray: Ray): Option[Double] = {
     val L = center - ray.start

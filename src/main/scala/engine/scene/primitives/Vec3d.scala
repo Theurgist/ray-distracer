@@ -13,6 +13,33 @@ case class Vec3d private(x: Double, y: Double, z: Double, len: Double) {
   def +(that: Vec3d): Vec3d = Vec3d(x + that.x, y + that.y, z + that.z)
 
   def *(that: Vec3d): Double = x * that.x + y * that.y + z * that.z
+  def *(scalar: Double): Vec3d = Vec3d(x * scalar, y * scalar, z * scalar)
+
+
+  def normalized: Vec3d = Vec3d.normalized(x, y, z)
+
+  /**
+    * Per-component multiplication
+    */
+  def ##(that: Vec3d): Vec3d = Vec3d(x * that.x, y * that.y, z * that.z)
+
+  /**
+    * Convert to integer color value
+    */
+  def asColorInt: Int = asColorInt(1.0)
+  /**
+    * Convert to integer color value
+    */
+  def asColorInt(a: Double): Int = {
+    ((cnv(a) & 0xFF) << 24) | ((cnv(x) & 0xFF) << 16) | ((cnv(y) & 0xFF) << 8) | ((cnv(z) & 0xFF) << 0)
+  }
+
+  /**
+    * Map [0.0, 1.0] vector component value to [0-255]
+    * @param v normalized value to convert
+    * @return
+    */
+  private def cnv(v: Double): Int = (math.min(math.max(0.0, v), 1.0) * 255).toInt
 }
 
 object Vec3d {

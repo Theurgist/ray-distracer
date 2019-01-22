@@ -43,8 +43,26 @@ class Raytracer(width: Int, height: Int, scene: Scene3D) {
     val intersected = scene.getIntersections(ray)
     if (intersected.isEmpty)
       0
-    else
-      intersected.head._2.color
+    else {
+      //intersected.map(vo => {
+
+      val vo = intersected.head
+      val hit = ray.start + ray.dir * vo._1
+      val norm = (hit - vo._2.center).normalized
+      val material = vo._2.material
+
+      val accumulatedDiffuseIntensity = scene.pointLights.map(pl => {
+        val lightDir = (pl.pos - hit).normalized
+        val diffuseIntensity = pl.intensity * math.max(0.0, lightDir*norm)
+        diffuseIntensity
+      }).sum
+
+      val pixelColor = scene.diffuseLight.clr ## material.clr + material.clr * accumulatedDiffuseIntensity
+      pixelColor.asColorInt
+
+      //})
+
+    }
   }
 
 }
