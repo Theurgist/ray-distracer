@@ -8,18 +8,16 @@ import scalafx.scene.image.WritableImage
 
 /**
   * Wrapped BufferedImage ready for JavaFX
-  * @param width
-  * @param height
-  * @param background
   */
-class BitmapImage(width: Int, height: Int, background: Color) {
+class BitmapImage(width: Int, height: Int, background: Option[Color]) {
 
   val bi: BufferedImage = {
     val bi = new BufferedImage(width,height, BufferedImage.TYPE_3BYTE_BGR)
-    bi.setRGB(
-      0,0, width, height,
-      Array.fill[Int](width*height)(background.getRGB),
-      0, 0)
+    background match {
+      case Some(clr) =>
+        bi.setRGB(0,0, width, height,Array.fill[Int](width*height)(clr.getRGB),0, 0)
+      case None =>
+    }
     bi
   }
 
@@ -28,11 +26,23 @@ class BitmapImage(width: Int, height: Int, background: Color) {
 
 
 object BitmapImage {
-  def createBlackCanvas(width: Int, height: Int): BitmapImage = {
-    new BitmapImage(width, height, new Color(0, 0, 0))
+  def genBlack(width: Int, height: Int): BitmapImage = {
+    new BitmapImage(width, height, Option(new Color(0, 0, 0)))
   }
 
-  def createWhiteCanvas(width: Int, height: Int): BitmapImage = {
-    new BitmapImage(width, height, new Color(255, 255, 255))
+  def genWhite(width: Int, height: Int): BitmapImage = {
+    new BitmapImage(width, height, Option(new Color(255, 255, 255)))
+  }
+
+  def genGradient(width: Int, height: Int): BitmapImage = {
+    val img = new BitmapImage(width, height, None)
+    val h = height.toDouble
+    val w = width.toDouble
+
+    (0 until width).foreach(x => (0 until height).foreach(y => {
+      val clr = new Color((y / h * 255).toInt, (x / w * 255).toInt , 0)
+      img.bi.setRGB(x, y, clr.getRGB)
+    }))
+    img
   }
 }
