@@ -13,5 +13,6 @@ case class Material(
     diffuseColor: Vec3d,
     specularExponent: Double = 20.0,
     specularAlbedo: Vec3d = Vec3d.unit,
-    diffuseAlbedo: Vec3d = Vec3d.unit
+    diffuseAlbedo: Vec3d = Vec3d.unit,
+    reflectAlbedo: Vec3d = Vec3d.zero
 )
