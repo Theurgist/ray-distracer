@@ -17,7 +17,7 @@ class Scene3D(
   /**
     * Calculate all scene objects intersections
     * @param ray casting ray
-    * @return collection of intersected objects, sorted by distance (asc)
+    * @return collection of (intersectionDistance, intersected object), sorted by distance (asc)
     */
   def getIntersections(ray: Ray): Iterable[(Double, VisibleObj)] = {
     objects.map(o => (o.intersect(ray), o))

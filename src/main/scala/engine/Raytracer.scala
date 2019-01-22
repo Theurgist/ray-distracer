@@ -56,10 +56,28 @@ class Raytracer(width: Int, height: Int, scene: Scene3D) {
 
       val (diffuseFullColor: Iterable[Vec3d], specularFullColor: Iterable[Vec3d]) = scene.pointLights.map(pl => {
         val lightDir = (pl.pos - hit).normalized
-        val diffuse: Vec3d = pl.color * math.max(0.0, lightDir*surfaceNormal)
-        val specular: Vec3d = calculateSpectacular(lightDir, surfaceNormal, ray.dir, material, pl)
 
-        (diffuse, specular)
+        def checkShadow: Boolean = {
+          val lightDistance = (pl.pos - hit).len
+          // checking if the point lies in the shadow of the lights[i]
+          val shadowOrigin =  if (lightDir * surfaceNormal < 0) hit - surfaceNormal*1e-3 else hit + surfaceNormal*1e-3
+
+          val shadowIntersected = scene.getIntersections(Ray(shadowOrigin, lightDir))
+          if (shadowIntersected.nonEmpty) {
+            val shadowHit = shadowOrigin + lightDir * shadowIntersected.head._1
+            (shadowHit-shadowOrigin).len < lightDistance
+          } else
+            false
+        }
+        
+        if (checkShadow)
+          (Vec3d.zero, Vec3d.zero)
+        else {
+          val diffuse: Vec3d = pl.color * math.max(0.0, lightDir*surfaceNormal)
+          val specular: Vec3d = calculateSpectacular(lightDir, surfaceNormal, ray.dir, material, pl)
+          (diffuse, specular)
+        }
+
       }).unzip
 
       val (dR, dG, dB) = diffuseFullColor.map(c => (c.x, c.y, c.z)) unzip3
