@@ -1,15 +1,20 @@
-import image.BitmapImage
-import raytracer.Raytracer
+import engine.Raytracer
+import samples.Spheres
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
-import scalafx.scene.image.{Image, ImageView, WritableImage}
+import scalafx.scene.image.{ImageView, WritableImage}
 import scalafx.scene.layout.HBox
 import scalafx.scene.paint.Color._
 
 object RTSceneWindow extends JFXApp {
-  val rt = new Raytracer(640, 480)
-  val img: WritableImage = rt.gen().asFxImage
+  println("Application started")
+  println
+
+  val scene = new Spheres
+
+  val rt = new Raytracer(640, 480, scene.scene)
+  val img: WritableImage = rt.gen(scene.cam).asFxImage
 
   stage = new PrimaryStage {
     title = "Let's raytrace!"
@@ -25,4 +30,6 @@ object RTSceneWindow extends JFXApp {
       }
     }
   }
+
+  println("\uD83D\uDDBA JavaFX scene constructed")
 }

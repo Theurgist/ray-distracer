@@ -1,4 +1,4 @@
-package image
+package engine.image
 
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -21,11 +21,16 @@ class BitmapImage(width: Int, height: Int, background: Option[Color]) {
     bi
   }
 
+  /**
+    * Get image object for JavaFX
+    * @return
+    */
   def asFxImage: WritableImage = SwingFXUtils.toFXImage(bi, null)
 }
 
 
 object BitmapImage {
+
   def genBlack(width: Int, height: Int): BitmapImage = {
     new BitmapImage(width, height, Option(new Color(0, 0, 0)))
   }
