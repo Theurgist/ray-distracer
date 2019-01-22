@@ -12,6 +12,8 @@ case class Vec3d private(x: Double, y: Double, z: Double, len: Double) {
   def -(that: Vec3d): Vec3d = Vec3d(x - that.x, y - that.y, z - that.z)
   def +(that: Vec3d): Vec3d = Vec3d(x + that.x, y + that.y, z + that.z)
 
+  def unary_-(): Vec3d = Vec3d(-x, -y, -z, len)
+
   def *(that: Vec3d): Double = x * that.x + y * that.y + z * that.z
   def *(scalar: Double): Vec3d = Vec3d(x * scalar, y * scalar, z * scalar)
 
@@ -58,4 +60,13 @@ object Vec3d {
   }
 
   private def calcLen(x: Double, y: Double, z: Double): Double = math.sqrt(x*x + y*y + z*z)
+
+  /**
+    * Zero constant vector
+    */
+  val zero: Vec3d = Vec3d(0,0,0,0)
+  /**
+    * Unit constant vector
+    */
+  val unit: Vec3d = Vec3d(1,1,1)
 }

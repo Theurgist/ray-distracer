@@ -1,6 +1,6 @@
 package engine.scene
 
-import engine.scene.entities.{DiffuseLight, PointLight}
+import engine.scene.entities.{AmbientLight, PointLight}
 import engine.scene.objects.VisibleObj
 import engine.scene.primitives.Ray
 
@@ -11,7 +11,7 @@ import engine.scene.primitives.Ray
 class Scene3D(
     val objects: Iterable[VisibleObj],
     val pointLights: Iterable[PointLight],
-    val diffuseLight: DiffuseLight
+    val ambientLight: AmbientLight
 ) {
 
   /**
