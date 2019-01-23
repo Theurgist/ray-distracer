@@ -17,12 +17,12 @@ class SomeSpheres {
     Sphere(Vec3d(0,0,-40), 5, SomeSpheresMaterials.mBlue),
     Sphere(Vec3d(3,0,-30), 2, SomeSpheresMaterials.mGreen),
 
-    Sphere(Vec3d(-3,0,-15), 2, SomeSpheresMaterials.mMateRed),
+    Sphere(Vec3d(-3,0,-25), 3, SomeSpheresMaterials.mGlass),
     Sphere(Vec3d(-3,3,-30), 2, SomeSpheresMaterials.mGreenMud),
 
-    Sphere(Vec3d(5,7,-30), 4, SomeSpheresMaterials.mMirror),
-    Sphere(Vec3d(-5,8,-30), 3, SomeSpheresMaterials.mMirror),
-    Sphere(Vec3d(0,-8,-20), 3, SomeSpheresMaterials.mMirror),
+    Sphere(Vec3d(5,7,-30), 4, SomeSpheresMaterials.mDirtyMirror),
+    Sphere(Vec3d(-5,8,-30), 3, SomeSpheresMaterials.mDirtyMirror),
+    Sphere(Vec3d(0,-8,-20), 5, SomeSpheresMaterials.mMirror),
   )
 
   private val pointLights = Iterable(
@@ -46,8 +46,10 @@ private object SomeSpheresMaterials {
   val mGreen = Material(Vec3d(.15, 1.0, .3), 50)
   val mGreenMud = Material(Vec3d(.15, .3, .3))
 
-  val mMateRed = Material(Vec3d(1.0, .3, .0), 10, Vec3d(.2, .3, .0))
+  val mMateRed = Material(Vec3d(1.0, .3, .0), 10, 1.0, Vec3d(.2, .3, .0))
 
-  val mMirror = Material(Vec3d(.2, .2, .2), 70, Vec3d(.1, .1, .1), Vec3d.unit, Vec3d.unit)
+  val mDirtyMirror = Material(Vec3d(.2, .2, .2), 1000, 1.0, Vec3d(.1, .1, .1), Vec3d.unit, Vec3d.unit)
+  val mMirror = Material(Vec3d(.9, .9, .9), 1000, 1.0, Vec3d(.1, .1, .1), Vec3d(.02, .02, .02), Vec3d.unit)
+  val mGlass = Material(Vec3d(.9, .9, .9), 1000, 1.5, Vec3d.unit, Vec3d(.05, .05, .05), Vec3d(.1, .1, .1), Vec3d(.9, .9, .9))
   
 }

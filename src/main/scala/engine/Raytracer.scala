@@ -55,9 +55,15 @@ class Raytracer(width: Int, height: Int, scene: Scene3D, maxDepth: Int = 5) {
       val material = vo._2.material
 
       val reflectDir = reflect(ray.dir, surfaceNormal).normalized
+      val refractDir = refract(ray.dir, surfaceNormal, material.refractiveIndex).normalized
+
       // offset the original point to avoid occlusion by the object itself
       val reflectOrigin = if (reflectDir * surfaceNormal < 0) hit - surfaceNormal*1e-3 else hit + surfaceNormal*1e-3
+      val refractOrigin = if (refractDir * surfaceNormal < 0) hit - surfaceNormal*1e-3 else hit + surfaceNormal*1e-3
+
       val reflectColor: Vec3d = castRay(Ray(reflectOrigin, reflectDir), depth+1)
+      val refractColor: Vec3d = castRay(Ray(refractOrigin, refractDir), depth+1)
+
 
       val (diffuseFullColor: Iterable[Vec3d], specularFullColor: Iterable[Vec3d]) = scene.pointLights.map(pl => {
         val lightDir = (pl.pos - hit).normalized
@@ -88,8 +94,8 @@ class Raytracer(width: Int, height: Int, scene: Scene3D, maxDepth: Int = 5) {
       val (dR, dG, dB) = diffuseFullColor.map(c => (c.x, c.y, c.z)) unzip3
       val (sR, sG, sB) = specularFullColor.map(c => (c.x, c.y, c.z)) unzip3
 
-      def calcClr(ambientComp: Double, diffuseComp: Double, reflectComp: Double,
-                  diffuseAlbedoComp: Double, specularAlbedoComp: Double, reflectAlbedoComp: Double,
+      def calcClr(ambientComp: Double, diffuseComp: Double, reflectComp: Double, refractComp: Double,
+                  diffuseAlbedoComp: Double, specularAlbedoComp: Double, reflectAlbedoComp: Double, refractAlbedoComp: Double,
                   diffuseInstances: Iterable[Double],
                   specularInstances: Iterable[Double]): Double = {
 
@@ -97,16 +103,20 @@ class Raytracer(width: Int, height: Int, scene: Scene3D, maxDepth: Int = 5) {
         val diffuse = diffuseInstances.sum * diffuseComp * diffuseAlbedoComp
         val specular = specularInstances.sum * specularAlbedoComp
         val reflect = reflectComp * reflectAlbedoComp
-        ambient + diffuse + specular + reflect
+        val refract = refractComp * refractAlbedoComp
+        ambient + diffuse + specular + reflect + refract
       }
 
       val pixel = Vec3d(
-        calcClr(scene.ambientLight.clr.x, material.diffuseColor.x, reflectColor.x, material.diffuseAlbedo.x,
-          material.specularAlbedo.x, material.reflectAlbedo.x, dR, sR),
-        calcClr(scene.ambientLight.clr.y, material.diffuseColor.y, reflectColor.y, material.diffuseAlbedo.y,
-          material.specularAlbedo.y, material.reflectAlbedo.y, dG, sG),
-        calcClr(scene.ambientLight.clr.z, material.diffuseColor.z, reflectColor.z, material.diffuseAlbedo.z,
-          material.specularAlbedo.z, material.reflectAlbedo.z, dB, sB)
+        calcClr(scene.ambientLight.clr.x, material.diffuseColor.x, reflectColor.x, refractColor.x,
+          material.diffuseAlbedo.x, material.specularAlbedo.x, material.reflectAlbedo.x, material.refractAlbedo.x,
+          dR, sR),
+        calcClr(scene.ambientLight.clr.y, material.diffuseColor.y, reflectColor.y, refractColor.y,
+          material.diffuseAlbedo.y, material.specularAlbedo.y, material.reflectAlbedo.y, material.refractAlbedo.y,
+          dG, sG),
+        calcClr(scene.ambientLight.clr.z, material.diffuseColor.z, reflectColor.z, refractColor.z,
+          material.diffuseAlbedo.z, material.specularAlbedo.z, material.reflectAlbedo.z, material.refractAlbedo.z,
+          dB, sB)
       )
       pixel
 
@@ -134,5 +144,26 @@ class Raytracer(width: Int, height: Int, scene: Scene3D, maxDepth: Int = 5) {
 
   private def reflect(I: Vec3d, surfaceNormal: Vec3d): Vec3d =
     I - surfaceNormal * 2 * (I * surfaceNormal)
+
+  /**
+    * Refraction according to Snell's law
+    */
+  private def refract(I: Vec3d, surfaceNormal: Vec3d, refractiveIndex: Double): Vec3d = {
+    val cosI = - math.max(-1, math.min(1, I*surfaceNormal))
+
+    val (effectiveCosI: Double, etaI: Double, etaT: Double, n: Vec3d) = if (cosI < 0) {
+      // the ray is inside the object - swap the indices and invert the normal to get the correct result
+      (-cosI, refractiveIndex, 1.0, -surfaceNormal)
+    } else {
+      (cosI, 1.0, refractiveIndex, surfaceNormal)
+    }
+
+    val eta = etaI / etaT
+    val k = 1 - eta*eta*(1 - effectiveCosI*effectiveCosI)
+    if (k < 0)
+      Vec3d.zero
+    else
+      I*eta + n*(eta * effectiveCosI - math.sqrt(k))
+  }
 
 }
