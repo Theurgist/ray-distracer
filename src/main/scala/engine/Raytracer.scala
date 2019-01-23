@@ -51,7 +51,7 @@ class Raytracer(width: Int, height: Int, scene: Scene3D, maxDepth: Int = 5) {
 
       val vo = intersected.head
       val hit = ray.start + ray.dir * vo._1
-      val surfaceNormal = (hit - vo._2.center).normalized
+      val surfaceNormal = vo._2.surfaceNormal(hit)
       val material = vo._2.material
 
       val reflectDir = reflect(ray.dir, surfaceNormal).normalized

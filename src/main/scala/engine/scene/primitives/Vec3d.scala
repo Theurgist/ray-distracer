@@ -14,8 +14,20 @@ case class Vec3d private(x: Double, y: Double, z: Double, len: Double) {
 
   def unary_-(): Vec3d = Vec3d(-x, -y, -z, len)
 
+  /**
+    * Dot product
+    */
   def *(that: Vec3d): Double = x * that.x + y * that.y + z * that.z
   def *(scalar: Double): Vec3d = Vec3d(x * scalar, y * scalar, z * scalar)
+
+  /**
+    * Cross product
+    */
+  def ^(that: Vec3d): Vec3d = Vec3d(
+    y * that.z - z * that.y,
+    z * that.x - x * that.z,
+    x * that.y - y * that.x
+  )
 
 
   def normalized: Vec3d = Vec3d.normalized(x, y, z)

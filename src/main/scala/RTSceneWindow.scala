@@ -1,5 +1,5 @@
 import engine.Raytracer
-import samples.SomeSpheres
+import samples.{SomeSpheres, SphereAndWall}
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
@@ -13,6 +13,7 @@ object RTSceneWindow extends JFXApp {
 
   val scene = new SomeSpheres
 
+  //val rt = new Raytracer(640, 480, scene.scene)
   val rt = new Raytracer(1280, 960, scene.scene)
   val img: WritableImage = rt.gen(scene.cam).asFxImage
 

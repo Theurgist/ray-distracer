@@ -3,8 +3,8 @@ package samples
 
 import engine.materials.Material
 import engine.scene.Scene3D
-import engine.scene.entities.{Camera, AmbientLight, PointLight}
-import engine.scene.objects.Sphere
+import engine.scene.entities.{AmbientLight, Camera, PointLight}
+import engine.scene.objects.{Sphere, Trigon}
 import engine.scene.primitives.Vec3d
 
 
@@ -20,9 +20,23 @@ class SomeSpheres {
     Sphere(Vec3d(-3,0,-25), 3, SomeSpheresMaterials.mGlass),
     Sphere(Vec3d(-3,3,-30), 2, SomeSpheresMaterials.mGreenMud),
 
+    Sphere(Vec3d(10,0,-40), 2, SomeSpheresMaterials.mRed),
+
     Sphere(Vec3d(5,7,-30), 4, SomeSpheresMaterials.mDirtyMirror),
     Sphere(Vec3d(-5,8,-30), 3, SomeSpheresMaterials.mDirtyMirror),
-    Sphere(Vec3d(0,-8,-20), 5, SomeSpheresMaterials.mMirror),
+    Sphere(Vec3d(-8,-8,-30), 5, SomeSpheresMaterials.mMirror),
+
+    // Floor
+    //Trigon(Array(Vec3d(-50, -10, -30), Vec3d(50, -10, -200), Vec3d(-50, -10, -200)), SomeSpheresMaterials.mMateRed),
+    //Trigon(Array(Vec3d(-50, -10, -30), Vec3d(50, -10, -30),  Vec3d( 50, -10, -200)), SomeSpheresMaterials.mMateRed),
+
+    // Back wall
+    Trigon(Array(Vec3d(-10, -10, -45), Vec3d(10, 200, -45),  Vec3d(-10, 200, -45)), SomeSpheresMaterials.mDirtyMirror),
+    Trigon(Array(Vec3d(-10, -10, -45), Vec3d(10, -10, -45),  Vec3d( 10, 200, -45)), SomeSpheresMaterials.mDirtyMirror),
+
+    // Two triangles on bottom with different orientation
+    Trigon(Array(Vec3d(10, -10, -43), Vec3d(5, -10, -44), Vec3d(5, -10, -40)), SomeSpheresMaterials.mGreen),
+    Trigon(Array(Vec3d(10, -10, -38), Vec3d(5, -10, -35), Vec3d(5, -10, -39)), SomeSpheresMaterials.mGreen),
   )
 
   private val pointLights = Iterable(

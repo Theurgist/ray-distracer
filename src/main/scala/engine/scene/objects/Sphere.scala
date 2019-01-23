@@ -33,4 +33,8 @@ case class Sphere(center: Vec3d, radius: Double, material: Material) extends Vis
         None
     }
   }
+
+  override def surfaceNormal(hit: Vec3d): Vec3d = {
+    (hit - center).normalized
+  }
 }
