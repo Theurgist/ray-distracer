@@ -44,9 +44,10 @@ class Raytracer(width: Int, height: Int, scene: Scene3D, maxDepth: Int = 5) {
 
   private def castRay(ray: Ray, depth: Int = 0): Vec3d = {
     val intersected = scene.getIntersections(ray)
-    if (depth >= maxDepth || intersected.isEmpty)
+    if (depth >= maxDepth || intersected.isEmpty) {
       Vec3d.zero
-    else {
+      Vec3d(.3, .3, .3)
+    } else {
       //intersected.map(vo => {
 
       val vo = intersected.head
