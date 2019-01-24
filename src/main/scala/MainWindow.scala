@@ -14,6 +14,10 @@ object MainWindow extends JFXApp {
 
   stage = new PrimaryStage {
     title = "Let's raytrace!"
+
+    minWidth = 400
+    minHeight = 300
+
     scene = new Scene {
       fill = LightGreen
       root = fxml

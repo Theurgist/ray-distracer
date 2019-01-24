@@ -7,7 +7,9 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -57,22 +59,56 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.2572383073496659, 0.7538975501113586" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <AnchorPane>
+        <AnchorPane prefWidth="196.0">
           <children>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Master" textAlignment="CENTER" wrapText="false">
-              <font>
-                <Font size="18.0" fx:id="x1" />
-              </font>
-              <textFill>
-                <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
-              </textFill>
-            </Label>
-                  <Button fx:id="btnRender" layoutX="22.0" layoutY="49.0" mnemonicParsing="false" onMouseClicked="#renderClick" text="Render" />
+                  <VBox layoutX="33.0" layoutY="75.0" prefHeight="550.0" prefWidth="227.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                  <Label alignment="CENTER" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Master" textAlignment="CENTER" wrapText="false">
+                    <font>
+                      <Font size="18.0" fx:id="x1" />
+                    </font>
+                    <textFill>
+                      <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
+                    </textFill>
+                  </Label>
+                        <TitledPane animated="false" text="Actions">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox prefHeight="180.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <Button fx:id="btnRender" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#renderClick" prefHeight="26.0" prefWidth="125.0" text="Render" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                        <TitledPane animated="false" text="Settings">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="585.0" prefWidth="225.0">
+                                 <children>
+                                    <VBox prefHeight="0.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <VBox>
+                                             <children>
+                                                <Label text="Recursion depth" />
+                                                <Spinner fx:id="recursionDepth" editable="true" maxWidth="1.7976931348623157E308" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                     </children>
+                  </VBox>
           </children>
         </AnchorPane>
-      <AnchorPane id="Content" fx:id="viewport" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
+      <AnchorPane id="Content" fx:id="viewport" minHeight="128.0" minWidth="128.0" prefHeight="550.0" prefWidth="450.0">
         <children>
           <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" textFill="$x2" wrapText="false" />
         </children>
