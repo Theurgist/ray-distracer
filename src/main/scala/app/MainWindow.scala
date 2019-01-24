@@ -1,3 +1,5 @@
+package app
+
 import javafx.{scene => jfxs}
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -10,7 +12,7 @@ object MainWindow extends JFXApp {
   println("Application started")
   println
 
-  val fxml: jfxs.Parent = FXMLView(getClass.getResource("mainWindow.fxml"), NoDependencyResolver)
+  val fxml: jfxs.Parent = FXMLView(getClass.getResource("/mainWindow.fxml"), NoDependencyResolver)
 
   stage = new PrimaryStage {
     title = "Let's raytrace!"

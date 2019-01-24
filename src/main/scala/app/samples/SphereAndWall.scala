@@ -1,4 +1,4 @@
-package samples
+package app.samples
 
 import engine.materials.Material
 import engine.scene.Scene3D

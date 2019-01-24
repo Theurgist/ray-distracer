@@ -1,15 +1,14 @@
+package app
+
 import engine.Raytracer
-import engine.image.BitmapImage
 import javafx.scene.layout
-import samples.{SomeSpheres, SphereAndWall}
+import app.samples.SomeSpheres
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
-import scalafx.scene.{Node, Scene}
+import scalafx.scene.Scene
 import scalafx.scene.image.{ImageView, WritableImage}
 import scalafx.scene.layout._
-import scalafx.scene.paint.Color._
-
-import scala.collection.JavaConverters._
+import scalafx.scene.paint.Color.LightGreen
 
 object RTSceneWindow extends JFXApp {
   println("Application started")

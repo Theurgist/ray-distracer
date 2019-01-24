@@ -17,8 +17,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox fx:id="mainWindow" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainWindowController">
+<VBox fx:id="mainWindow" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -73,7 +72,7 @@
                       <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
                     </textFill>
                   </Label>
-                        <TitledPane animated="false" text="Actions">
+                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Actions">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
