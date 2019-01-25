@@ -1,45 +1,74 @@
 package engine
 
+import java.awt.image.{BufferedImage, WritableRaster}
+
+import com.typesafe.scalalogging.StrictLogging
 import engine.image.BitmapImage
 import engine.materials.Material
 import engine.scene.Scene3D
 import engine.scene.entities.{Camera, PointLight}
 import engine.scene.primitives.{Ray, Vec3d}
+import engine.system.PerformanceTimer
 
 import scala.language.postfixOps
 
 /**
   * Raytracing engine
-  * @param width canvas width
-  * @param height canvas height
+  * @param w canvas width
+  * @param h canvas height
   * @param scene renderable scene
   */
-class Raytracer(width: Int, height: Int, scene: Scene3D, maxDepth: Int = 5) {
+class Raytracer(w: Double, h: Double, scene: Scene3D, maxDepth: Int = 5, buffered: Boolean = false) extends StrictLogging {
+  private val framebuffer: Array[Int] = Array.ofDim[Int](w.toInt*h.toInt)
+
 
   def gen(camera: Camera): BitmapImage = {
-    println("⏲ Start raytracing")
+    logger.info("Start raytracing")
+    val pt = new PerformanceTimer(s"Raytrace ${w.toInt}*${h.toInt}=${w*h/10e3} Kpixels; maxDepth: $maxDepth")
 
-    val img = BitmapImage.genBlack(width, height)
-    val h = height.toDouble
-    val w = width.toDouble
+    pt.startLap()
+    val img = if (buffered) {
+      genRays(w,h,camera,framebuffer)
+      genImageFromArray(framebuffer, w.toInt, h.toInt)
+    } else {
+      val img = BitmapImage.genBlack(w.toInt, h.toInt)
+      //TODO camera's code does not work with position properly
+      (0 until w.toInt).foreach(i => (0 until h.toInt).foreach(j => {
+        val x =  (2*(i + 0.5)/w  - 1)*math.tan(camera.fov/2)*w/h
+        val y = -(2*(j + 0.5)/h - 1)*math.tan(camera.fov/2)
+        val dir = Vec3d.normalized(x, y, -1)
 
-    //val framebuffer: Array[Int] = Array.ofDim[Int](width*height)
+        val ray = Ray(camera.pos, dir)
+        val color: Int = castRay(ray).asColorInt
+        //framebuffer[i+j*width] = color
+        img.bi.setRGB(i, j, color)
+      }))
+      img
+    }
+    pt.finishLap("Whole process")
+    pt.finish()
 
-    //TODO camera's code does not work with position properly
-    (0 until width).foreach(i => (0 until height).foreach(j => {
-      val x =  (2*(i + 0.5)/w  - 1)*math.tan(camera.fov/2)*width/h
+    logger.info("Finish raytracing")
+    img
+  }
+
+  private def genRays(w: Double, h: Double, camera: Camera, framebuffer: Array[Int]): Unit = {
+    (0 until w.toInt).foreach(i => (0 until h.toInt).foreach(j => {
+      val x =  (2*(i + 0.5)/w  - 1)*math.tan(camera.fov/2)*w/h
       val y = -(2*(j + 0.5)/h - 1)*math.tan(camera.fov/2)
       val dir = Vec3d.normalized(x, y, -1)
 
       val ray = Ray(camera.pos, dir)
       val color: Int = castRay(ray).asColorInt
-      //framebuffer[i+j*width] = color
-      img.bi.setRGB(i, j, color)
+      framebuffer(i + j*w.toInt) = color
     }))
+  }
 
-
-    println("✓ Finish raytracing")
-    img
+  private def genImageFromArray(pixels: Array[Int], w: Int, h: Int): BitmapImage = {
+    val img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+    val raster = img.getData.asInstanceOf[WritableRaster]
+    raster.setPixels(0,0, w,h, pixels)
+    new BitmapImage(img)
   }
 
   private def castRay(ray: Ray, depth: Int = 0): Vec3d = {

@@ -9,9 +9,9 @@ import scalafx.scene.image.WritableImage
 /**
   * Wrapped BufferedImage ready for JavaFX
   */
-class BitmapImage(width: Int, height: Int, background: Option[Color]) {
+class BitmapImage(val bi: BufferedImage) {
 
-  val bi: BufferedImage = {
+  def this(width: Int, height: Int, background: Option[Color]) = this {
     val bi = new BufferedImage(width,height, BufferedImage.TYPE_3BYTE_BGR)
     background match {
       case Some(clr) =>

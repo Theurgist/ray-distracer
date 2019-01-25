@@ -8,4 +8,4 @@ import engine.scene.primitives.Vec3d
   * @param dir viewing direction
   * @param fov field-of-view (radians)
   */
-class Camera(var pos: Vec3d, var dir: Vec3d, var fov: Double)
+class Camera(var pos: Vec3d, var dir: Vec3d, val fov: Double)

@@ -14,5 +14,10 @@ trait Intersectable {
     */
   def intersect(ray: Ray): Option[Double]
 
+  /**
+    * Calculate surface normal (outward)
+    * @param hit collision point or direction (if needed)
+    * @return
+    */
   def surfaceNormal(hit: Vec3d): Vec3d
 }

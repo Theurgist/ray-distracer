@@ -1,5 +1,6 @@
 package app
 
+import com.typesafe.scalalogging.StrictLogging
 import javafx.{scene => jfxs}
 import scalafx.Includes._
 import scalafx.application.JFXApp
@@ -8,9 +9,10 @@ import scalafx.scene.Scene
 import scalafx.scene.paint.Color._
 import scalafxml.core.{FXMLView, NoDependencyResolver}
 
-object MainWindow extends JFXApp {
-  println("Application started")
-  println
+
+object MainWindow extends JFXApp with StrictLogging {
+  Thread.currentThread().setName("JFX")
+  logger.info("Application started")
 
   val fxml: jfxs.Parent = FXMLView(getClass.getResource("/mainWindow.fxml"), NoDependencyResolver)
 
@@ -26,5 +28,5 @@ object MainWindow extends JFXApp {
     }
   }
 
-  println("\uD83D\uDDBA JavaFX scene constructed")
+  logger.info("JavaFX scene constructed")
 }
