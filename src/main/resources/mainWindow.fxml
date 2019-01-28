@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -72,31 +73,36 @@
                       <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
                     </textFill>
                   </Label>
-                        <TitledPane animated="false" maxHeight="1.7976931348623157E308" text="Actions">
+                        <TitledPane animated="false" text="Settings">
                           <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="585.0" prefWidth="225.0">
                                  <children>
-                                    <VBox prefHeight="180.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <VBox prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <Button fx:id="btnRender" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#renderClick" prefHeight="26.0" prefWidth="125.0" text="Render" />
+                                          <VBox>
+                                             <children>
+                                                <Label text="Recursion depth" />
+                                                <Spinner fx:id="recursionDepth" editable="true" maxWidth="1.7976931348623157E308" />
+                                                <Label text="Enable lighting modes" />
+                                                <CheckBox fx:id="bAmbient" mnemonicParsing="false" selected="true" text="Ambient" />
+                                                <CheckBox fx:id="bDiffuse" mnemonicParsing="false" selected="true" text="Diffuse" />
+                                                <CheckBox fx:id="bSpecular" mnemonicParsing="false" selected="true" text="Specular" />
+                                                <CheckBox fx:id="bShadows" mnemonicParsing="false" selected="true" text="Shadows" />
+                                             </children>
+                                          </VBox>
                                        </children>
                                     </VBox>
                                  </children>
                               </AnchorPane>
                           </content>
                         </TitledPane>
-                        <TitledPane animated="false" text="Settings">
+                        <TitledPane animated="false" maxHeight="-Infinity" minHeight="-Infinity" text="Actions">
                           <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="585.0" prefWidth="225.0">
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="200.0">
                                  <children>
-                                    <VBox prefHeight="0.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <VBox prefHeight="180.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <VBox>
-                                             <children>
-                                                <Label text="Recursion depth" />
-                                                <Spinner fx:id="recursionDepth" editable="true" maxWidth="1.7976931348623157E308" />
-                                             </children>
-                                          </VBox>
+                                          <Button fx:id="btnRender" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onMouseClicked="#renderClick" prefHeight="26.0" prefWidth="125.0" text="Render" />
                                        </children>
                                     </VBox>
                                  </children>

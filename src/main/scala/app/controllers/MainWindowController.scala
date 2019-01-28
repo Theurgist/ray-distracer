@@ -1,10 +1,10 @@
 package app.controllers
 
 import app.samples.SomeSpheres
-import engine.Raytracer
+import engine.{Raytracer, RenderingSettings}
 import engine.image.BitmapImage
 import scalafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory
-import scalafx.scene.control.{Button, Spinner, SpinnerValueFactory}
+import scalafx.scene.control.{Button, CheckBox, Spinner, SpinnerValueFactory}
 import scalafx.scene.image.{ImageView, WritableImage}
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{AnchorPane, Priority}
@@ -14,7 +14,12 @@ import scalafxml.core.macros.sfxml
 class MainWindowController(
   val btnRender: Button,
   val viewport: AnchorPane,
-  val recursionDepth: Spinner[Int]
+  val recursionDepth: Spinner[Int],
+
+  val bAmbient: CheckBox,
+  val bDiffuse: CheckBox,
+  val bSpecular: CheckBox,
+  val bShadows: CheckBox
 ) {
   val scene3d = new SomeSpheres
   //val img: WritableImage = rt.gen(scene.cam).asFxImage
@@ -37,7 +42,21 @@ class MainWindowController(
   }
 
   def renderClick(event: MouseEvent): Unit = {
-    val rt = new Raytracer(viewport.getWidth.toInt, viewport.getHeight.toInt, scene3d.scene)
+
+
+
+    val rs = RenderingSettings(
+      recursionDepth.getValue,5,5,
+
+      bAmbient.selected.value,
+      bDiffuse.selected.value,
+      bSpecular.selected.value,
+      bShadows.selected.value,
+
+      buffered = false,
+    )
+
+    val rt = new Raytracer(viewport.getWidth.toInt, viewport.getHeight.toInt, scene3d.scene, rs)
     val img: WritableImage = rt.gen(scene3d.cam).asFxImage
 
     val imgBox = boxWithImage(img)

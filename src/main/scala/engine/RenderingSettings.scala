@@ -7,5 +7,13 @@ case class RenderingSettings(
 
     ambient: Boolean,
     diffuse: Boolean,
-    specular: Boolean
-)
+    specular: Boolean,
+    shadows: Boolean,
+
+    buffered: Boolean
+) {
+  override def toString: String =
+    s"Depth [rt: $rayTracingDepth rl: $reflections rr: $refractions] " +
+    s"Lighting [a: $ambient d: $diffuse s: $specular] " +
+    s"Mem [buffered: $buffered"
+}

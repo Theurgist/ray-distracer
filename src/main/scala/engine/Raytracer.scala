@@ -18,16 +18,16 @@ import scala.language.postfixOps
   * @param h canvas height
   * @param scene renderable scene
   */
-class Raytracer(w: Double, h: Double, scene: Scene3D, maxDepth: Int = 5, buffered: Boolean = false) extends StrictLogging {
-  private val framebuffer: Array[Int] = Array.ofDim[Int](w.toInt*h.toInt)
+class Raytracer(w: Double, h: Double, scene: Scene3D, rs: RenderingSettings) extends StrictLogging {
+  private val framebuffer: Array[Int] = Array.ofDim[Int](w.toInt * h.toInt * 4)
 
 
   def gen(camera: Camera): BitmapImage = {
     logger.info("Start raytracing")
-    val pt = new PerformanceTimer(s"Raytrace ${w.toInt}*${h.toInt}=${w*h/10e3} Kpixels; maxDepth: $maxDepth")
+    val pt = new PerformanceTimer(s"Raytrace ${w.toInt}*${h.toInt}=${w*h/10e3} Kpixels; settings: $rs")
 
     pt.startLap()
-    val img = if (buffered) {
+    val img = if (rs.buffered) {
       genRays(w,h,camera,framebuffer)
       genImageFromArray(framebuffer, w.toInt, h.toInt)
     } else {
@@ -73,7 +73,7 @@ class Raytracer(w: Double, h: Double, scene: Scene3D, maxDepth: Int = 5, buffere
 
   private def castRay(ray: Ray, depth: Int = 0): Vec3d = {
     val intersected = scene.getIntersections(ray)
-    if (depth >= maxDepth || intersected.isEmpty) {
+    if (depth >= rs.rayTracingDepth || intersected.isEmpty) {
       Vec3d.zero
       Vec3d(.3, .3, .3)
     } else {
@@ -84,15 +84,21 @@ class Raytracer(w: Double, h: Double, scene: Scene3D, maxDepth: Int = 5, buffere
       val surfaceNormal = vo._2.surfaceNormal(hit)
       val material = vo._2.material
 
-      val reflectDir = reflect(ray.dir, surfaceNormal).normalized
-      val refractDir = refract(ray.dir, surfaceNormal, material.refractiveIndex).normalized
+      val reflectColor: Vec3d = {
+        val reflectDir = reflect(ray.dir, surfaceNormal).normalized
+        // offset the original point to avoid occlusion by the object itself
+        val reflectOrigin = if (reflectDir * surfaceNormal < 0) hit - surfaceNormal*1e-3 else hit + surfaceNormal*1e-3
 
-      // offset the original point to avoid occlusion by the object itself
-      val reflectOrigin = if (reflectDir * surfaceNormal < 0) hit - surfaceNormal*1e-3 else hit + surfaceNormal*1e-3
-      val refractOrigin = if (refractDir * surfaceNormal < 0) hit - surfaceNormal*1e-3 else hit + surfaceNormal*1e-3
+        castRay(Ray(reflectOrigin, reflectDir), depth+1)
+      }
 
-      val reflectColor: Vec3d = castRay(Ray(reflectOrigin, reflectDir), depth+1)
-      val refractColor: Vec3d = castRay(Ray(refractOrigin, refractDir), depth+1)
+      val refractColor = {
+        val refractDir = refract(ray.dir, surfaceNormal, material.refractiveIndex).normalized
+        // offset the original point to avoid occlusion by the object itself
+        val refractOrigin = if (refractDir * surfaceNormal < 0) hit - surfaceNormal*1e-3 else hit + surfaceNormal*1e-3
+
+        castRay(Ray(refractOrigin, refractDir), depth+1)
+      }
 
 
       val (diffuseFullColor: Iterable[Vec3d], specularFullColor: Iterable[Vec3d]) = scene.pointLights.map(pl => {
@@ -111,7 +117,7 @@ class Raytracer(w: Double, h: Double, scene: Scene3D, maxDepth: Int = 5, buffere
             false
         }
 
-        if (checkShadow)
+        if (rs.shadows && checkShadow)
           (Vec3d.zero, Vec3d.zero)
         else {
           val diffuse: Vec3d = pl.color * math.max(0.0, lightDir*surfaceNormal)
@@ -129,11 +135,11 @@ class Raytracer(w: Double, h: Double, scene: Scene3D, maxDepth: Int = 5, buffere
                   diffuseInstances: Iterable[Double],
                   specularInstances: Iterable[Double]): Double = {
 
-        val ambient = ambientComp * diffuseComp * diffuseAlbedoComp
-        val diffuse = diffuseInstances.sum * diffuseComp * diffuseAlbedoComp
-        val specular = specularInstances.sum * specularAlbedoComp
-        val reflect = reflectComp * reflectAlbedoComp
-        val refract = refractComp * refractAlbedoComp
+        val ambient = if (rs.ambient) ambientComp * diffuseComp * diffuseAlbedoComp else 0
+        val diffuse = if (rs.diffuse) diffuseInstances.sum * diffuseComp * diffuseAlbedoComp else 0
+        val specular = if (rs.specular) specularInstances.sum * specularAlbedoComp else 0
+        val reflect = if (rs.reflections != 0) reflectComp * reflectAlbedoComp else 0
+        val refract = if (rs.refractions != 0) refractComp * refractAlbedoComp else 0
         ambient + diffuse + specular + reflect + refract
       }
 
