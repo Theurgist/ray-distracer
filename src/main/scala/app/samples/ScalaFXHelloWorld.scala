@@ -1,4 +1,4 @@
-package app
+package app.samples
 
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage

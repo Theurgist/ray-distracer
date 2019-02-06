@@ -10,11 +10,11 @@ import scalafx.scene.paint.Color._
 import scalafxml.core.{FXMLView, NoDependencyResolver}
 
 
-object MainWindow extends JFXApp with StrictLogging {
+object Client extends JFXApp with StrictLogging {
   Thread.currentThread().setName("JFX")
   logger.info("Application started")
 
-  val fxml: jfxs.Parent = FXMLView(getClass.getResource("/mainWindow.fxml"), NoDependencyResolver)
+  val fxml: jfxs.Parent = FXMLView(getClass.getResource("/jfxui/mainWindow.fxml"), NoDependencyResolver)
 
   stage = new PrimaryStage {
     title = "Let's raytrace!"
