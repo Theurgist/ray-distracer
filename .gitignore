@@ -1,6 +1,7 @@
 ## IDEA and Operating system
 .idea
 .directory
+*.iml
 
 
 ### App's droppings
